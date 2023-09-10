@@ -2,9 +2,10 @@ import { Model, DataTypes, Sequelize, Op } from "sequelize";
 import path from "path";
 import dotenv from "dotenv";
 import { create } from "domain";
+import { promises } from "dns";
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
-const DATABASE_URL = process.env.DATABASE_URL;
+const DATABASE_URL: string = process.env.DATABASE_URL as string;
 
 const sequelizeDB = new Sequelize(DATABASE_URL, {
   dialect: "postgres",
@@ -40,64 +41,39 @@ const User = sequelizeDB.define(
   }
 );
 
-const ss = async () => {
-  try {
-    await sequelizeDB.authenticate();
-    console.log("Connection has been established successfully.");
-  } catch (error) {
-    console.error("Unable to connect to the database:", error);
-  }
-};
-// ss();
-export const pula = async () => {
+export const checkIfUserExists = async (email: string): Promise<boolean> => {
   await sequelizeDB.sync();
-  const jane = await User.create({
-    inserted_at: new Date(),
-    updated_at: new Date(),
-    user_name: "user4",
-    encrypted_password: "test",
-    role: "test2",
-    email: `test@test.com`,
-  });
-  console.log(jane.toJSON());
-};
-// export const pula = () => {
-//   console.log("ssas", DATABASE_URL);
-// };
-export const checkIfUserExists = async (userData: {
-  email: string;
-  username: string;
-}) => {
-  await sequelizeDB.sync();
+
   const foundUser = await User.findOne({
     where: {
-      [Op.or]: [{ email: userData.email }, { user_name: userData.username }],
+      email: email,
     },
   });
-  if (foundUser === null) {
-    return false;
-  } else {
-    return true;
-  }
+
+  return foundUser !== null;
 };
 
-export const createUser = async ({
-  email,
-  username,
-  password,
-}: {
-  email: string;
-  username: string;
-  password: string;
-}) => {
+export const createUser = async (
+  {
+    email,
+    username,
+    password,
+  }: {
+    email: string;
+    username?: string;
+    password?: string;
+  },
+  authType: string
+) => {
   await sequelizeDB.sync();
   const createdUser = await User.create({
     inserted_at: new Date(),
     updated_at: new Date(),
     user_name: username,
-    encrypted_password: password,
+    encrypted_password: authType === "local" ? password : null,
     role: "user",
     email: email,
+    auth_type: authType,
   });
   return createdUser;
 };

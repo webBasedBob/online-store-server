@@ -1,5 +1,5 @@
 import express, { Express, Router, Request, Response } from "express";
-import { checkIfUserExists, createUser, getUser, pula } from "../../db/db";
+import { checkIfUserExists, createUser, getUser, pula } from "../../db/auth";
 import bcrypt from "bcrypt";
 
 const createAccount = async (req: Request, res: Response) => {
@@ -16,11 +16,9 @@ const createAccount = async (req: Request, res: Response) => {
       const saltRounds = 10;
       const encryptedPsw = await bcrypt.hash(authData.password, saltRounds);
       authData.password = encryptedPsw;
-      const newUser = await createUser(authData);
+      const newUser = await createUser(authData, "local");
       response = {
         userCreated: true,
-        email: newUser.email,
-        username: newUser.user_name,
       };
       res.send(JSON.stringify(response));
     } catch (err) {
