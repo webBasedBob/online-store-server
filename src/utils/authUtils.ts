@@ -4,12 +4,10 @@ import { DoneCallback } from "passport";
 import { User } from "../../types/auth";
 export const getAuthState = (req: Request, res: Response) => {
   if (req.isAuthenticated()) {
-    console.log("yes");
+    res.send(JSON.stringify(req.user));
   } else {
-    console.log("noi");
+    return res.status(401).send(JSON.stringify({ message: "Unauthenticated" }));
   }
-  console.log(req.user);
-  res.send(JSON.stringify({ pula: "pizda" }));
 };
 
 export const serialize = (user, done: DoneCallback) => {
