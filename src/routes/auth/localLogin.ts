@@ -1,9 +1,7 @@
-import express, { Express, Router, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { getUser } from "../../db/auth";
-import { getJWT } from "../../utils/utils";
 import cookie from "cookie";
-import passport, { DoneCallback } from "passport";
+import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { deserialize, serialize } from "../../utils/authUtils";
 

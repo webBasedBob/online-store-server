@@ -14,5 +14,12 @@ const sequelizeDB = new Sequelize(DATABASE_URL, {
       rejectUnauthorized: false,
     },
   },
+  logging: process.env.NODE_ENV === "development" ? console.log : false,
+  pool: {
+    max: 10, // Adjust based on your application's requirements
+    min: 0,
+    idle: 10000,
+  },
 });
+
 export default sequelizeDB;

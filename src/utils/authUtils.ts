@@ -10,9 +10,14 @@ export const getAuthState = (req: Request, res: Response) => {
   }
 };
 
-export const serialize = (user, done: DoneCallback) => {
+export const serialize = (
+  user: User,
+  done: (err: any, id?: false | string | null | undefined) => void
+) => {
+  console.log(user);
   done(null, user.email);
 };
+
 export const deserialize = async (email: string, done: DoneCallback) => {
   try {
     const user = await getUser(email);

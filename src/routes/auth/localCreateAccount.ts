@@ -1,5 +1,5 @@
 import express, { Express, Router, Request, Response } from "express";
-import { checkIfUserExists, createUser, getUser, pula } from "../../db/auth";
+import { checkIfUserExists, createUser, getUser } from "../../db/auth";
 import bcrypt from "bcrypt";
 
 const createAccount = async (req: Request, res: Response) => {

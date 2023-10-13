@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import session from "express-session";
 import SessionStore from "./src/db/sessions";
+import productsRouter from "./src/routes/products";
 
 const app: Express = express();
 dotenv.config();
@@ -42,7 +43,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 const port = process.env.PORT;
 app.use("/auth", authRouter);
-
+app.use("/products", productsRouter);
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
